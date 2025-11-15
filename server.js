@@ -116,6 +116,10 @@ app.get('/generate-wallet', async (req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
+app.use(express.static('public'));
+app.get('/', (req, res) => {
+  res.sendFile(__dirname + '/public/index.html');
+});
 app.listen(PORT, () => {
   console.log(`TRON Server on http://localhost:${PORT}`);
   console.log(`Test: GET /balance/${tronWeb.address.fromPrivateKey(privateKey)}`);

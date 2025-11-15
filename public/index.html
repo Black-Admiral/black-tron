@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Black TRON Pay</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+  </style>
+</head>
+<body class="bg-gradient-to-br from-black via-gray-900 to-green-900 min-h-screen flex items-center justify-center p-4">
+  <div class="bg-gray-800 p-8 rounded-2xl shadow-2xl max-w-md w-full border border-green-500">
+    <div class="text-center mb-6">
+      <h1 class="text-3xl font-bold text-green-400">BLACK TRON</h1>
+      <p class="text-gray-300">Send USDT to Binance</p>
+    </div>
+
+    <form id="form" class="space-y-4">
+      <input type="text" id="to" placeholder="Binance TRC20 (T...)" class="w-full p-3 bg-gray-700 text-white border border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent" required />
+      <label for="amount" class="sr-only">Amount (USDT)</label>
+      <input type="number" id="amount" value="1" min="0.01" step="0.01" placeholder="Amount in USDT" title="Amount in USDT" class="w-full p-3 bg-gray-700 text-white border border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500" required />
+      <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white p-3 rounded-lg font-bold transition">
+        SEND USDT
+      </button>
+    </form>
+
+    <div id="result" class="mt-6 p-4 bg-green-900 bg-opacity-50 rounded-lg text-center hidden">
+      <p class="text-green-300 font-bold">Sent <span id="sent"></span> USDT!</p>
+      <a id="link" href="#" target="_blank" class="text-cyan-400 text-sm hover:underline">View TX on Tronscan</a>
+    </div>
+
+    <p class="text-center text-xs text-gray-400 mt-6">
+      Powered by <span class="font-bold text-green-400">@wekahapa</span> | Kenya
+    </p>
+  </div>
+
+  <script>
+    document.getElementById('form').onsubmit = async (e) => {
+      e.preventDefault();
+      const to = document.getElementById('to').value.trim();
+      const amount = document.getElementById('amount').value;
+      const result = document.getElementById('result');
+      const sent = document.getElementById('sent');
+      const link = document.getElementById('link');
+
+      try {
+        const res = await fetch('/send-usdt', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ to, amount: parseFloat(amount) })
+        });
+        const data = await res.json();
+        if (data.success) {
+          sent.textContent = amount;
+          link.href = data.explorer;
+          link.textContent = data.txid;
+          result.classList.remove('hidden');
+        } else {
+          alert('Error: ' + (data.error || 'Failed'));
+        }
+      } catch (err) {
+        alert('Network error. Try again.');
+      }
+    };
+  </script>
+</body>
+</html>
