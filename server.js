@@ -115,7 +115,7 @@ app.listen(PORT, () => {
   console.log(`Visit: http://localhost:${PORT}`);
 });
 // === ADMIN DASHBOARD ===
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'oklein2025'; // Change this!
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD; // Change this!
 
 app.get('/admin', (req, res) => {
   if (req.query.pass !== ADMIN_PASSWORD) {
