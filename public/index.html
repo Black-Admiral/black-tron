@@ -5,44 +5,58 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Oklein – Simply Crypto</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     body { font-family: 'Inter', sans-serif; }
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
   </style>
 </head>
-<body class="bg-gradient-to-br from-gray-900 via-black to-gray-900 text-white min-h-screen">
-  <div class="container mx-auto px-4 py-12 max-w-2xl">
-    <div class="text-center mb-12">
-      <h1 class="text-5xl font-bold mb-4">Oklein</h1>
-      <p class="text-xl text-gray-300">Simply Crypto</p>
+<body class="bg-black text-white min-h-screen flex items-center justify-center px-4">
+  <div class="w-full max-w-md">
+    <!-- Logo -->
+    <div class="text-center mb-4xl font-bold text-center mb-12 tracking-tight">
+      OKLEIN
     </div>
 
-    <div class="grid md:grid-cols-2 gap-8">
-      <!-- BUY USDT -->
-      <div class="bg-gray-800 p-8 rounded-2xl shadow-2xl border border-gray-700">
-        <h2 class="text-2xl font-bold text-green-400 mb-6 text-center">Buy USDT with M-PESA</h2>
-        <form id="buyForm" enctype="multipart/form-data">
-          <input type="text" placeholder="Your Name (optional)" class="w-full p-3 mb-4 bg-gray-700 rounded-lg" />
-          <input type="tel" placeholder="M-PESA Phone Number" class="w-full p-3 mb-4 bg-gray-700 rounded-lg" required />
-          <input type="number" placeholder="Amount in USDT" class="w-full p-3 mb-4 bg-gray-700 rounded-lg" required />
-          <input type="text" placeholder="Your TRON/Binance Address (T...)" class="w-full p-3 mb-4 bg-gray-700 rounded-lg" required />
-          <label for="proofOfPayment" class="block text-sm mb-2 text-gray-300">Upload proof of payment (image)</label>
-          <input id="proofOfPayment" type="file" accept="image/*" title="Upload proof of payment" placeholder="Upload an image file" aria-label="Upload proof of payment" class="w-full p-3 mb-6 bg-gray-700 rounded-lg" required />
-          <button type="submit" class="w-full bg-green-600 hover:bg-green-700 py-4 rounded-lg font-bold text-lg">
-            Submit Order – You Receive USDT
-          </button>
-        </form>
-      </div>
+    <!-- Welcome Text -->
+    <h1 class="text-3xl font-bold text-center mb-10">Welcome to Oklein</h1>
 
-      <!-- SELL USDT -->
-      <div class="bg-gray-800 p-8 rounded-2xl shadow-2xl border border-gray-700">
-        <h2 class="text-2xl font-bold text-red-400 mb-6 text-center">Sell USDT → Receive M-PESA</h2>
-        <p class="text-gray-400 text-center mb-6">Coming soon – contact admin for manual trade</p>
-      </div>
+    <!-- Input -->
+    <div class="mb-6">
+      <input 
+        type="text" 
+        placeholder="Email/Phone (without country code)" 
+        class="w-full bg-gray-900 border border-gray-700 rounded-lg px-5 py-4 text-lg focus:outline-none focus:border-yellow-500 transition"
+        id="identifier"
+      />
     </div>
 
-    <div class="text-center mt-12 text-gray-500">
-      © 2025 Oklein Technologies Ltd. • Oklein – Simply Crypto
+    <!-- Checkbox -->
+    <label class="flex items-start gap-3 mb-8 text-sm text-gray-400 cursor-pointer">
+      <input type="checkbox" checked class="mt-1" />
+      <span>By creating an account, I agree to Oklein's<br><a href="#" class="text-yellow-500 hover:underline">Terms of Service</a> and <a href="#" class="text-yellow-500 hover:underline">Privacy Notice</a>.</span>
+    </label>
+
+    <!-- Continue Button -->
+    <button class="w-full bg-yellow-500 hover:bg-yellow-600 text-black py-4 rounded-lg font-bold text-lg mb-6 transition">
+      Continue
+    </button>
+
+    <div class="text-center text-gray-500 text-sm mb-8">or</div>
+
+    <!-- Social Logins -->
+    <button class="w-full bg-gray-800 hover:bg-gray-700 border border-gray-700 py-4 rounded-lg flex items-center justify-center gap-4 mb-4 transition">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" class="w-6 h-6" alt="Google logo" title="Google logo" />
+      <span>Continue with Google</span>
+    </button>
+
+    <button class="w-full bg-gray-800 hover:bg-gray-700 border border-gray-700 py-4 rounded-lg flex items-center justify-center gap-4 mb-8 transition">
+      <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.94-.49-7-3.85-7-7.93s3.06-7.44 7-7.93V17.93zm2-13.86c3.94.49 7 3.85 7 7.93s-3.06 7.44-7 7.93V4.07z"/></svg>
+      <span>Continue with Apple</span>
+    </button>
+
+    <!-- Footer Links -->
+    <div class="text-center text-sm text-gray-500">
+      Already have an account? <a href="/login" class="text-yellow-500 hover:underline">Log In</a>
     </div>
   </div>
 </body>
