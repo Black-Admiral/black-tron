@@ -156,3 +156,26 @@ app.post('/api/admin/approve', async (req, res) => {
     res.status(500).json({ error: err.message || 'Transaction failed' });
   }
 });
+// === LIVE RATE MANAGER (editable from website) ===
+let BUY_RATE_KES = 137.50;   // default fallback
+
+// Get current rate
+app.get('/api/rate', (req, res) => {
+  res.json({ rate: BUY_RATE_KES });
+});
+
+// Update rate from admin panel
+app.post('/api/admin/set-rate', (req, res) => {
+  const auth = req.headers.authorization;
+  if (auth !== 'Bearer oklein-admin-token-2025') {
+    return res.status(403).json({ error: 'Forbidden' });
+  }
+
+  const { rate } = req.body;
+  if (rate && rate >= 100 && rate <= 200) {
+    BUY_RATE_KES = parseFloat(rate);
+    res.json({ success: true, newRate: BUY_RATE_KES });
+  } else {
+    res.status(400).json({ error: 'Rate must be between 100–200 KES' });
+  }
+});
