@@ -115,11 +115,10 @@ app.listen(PORT, () => {
   console.log(`Visit: http://localhost:${PORT}`);
 });
 // === ADMIN DASHBOARD ===
-// TEMPORARY – REMOVE LATER
-const ADMIN_PASSWORD = 'M@th1970#';   // ← hard-coded for testing
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'oklein2025';
 
 app.get('/admin', (req, res) => {
-  if (req.query.pass !== 'M@th1970#') {
+  if (req.query.pass !== ADMIN_PASSWORD) {
     return res.status(403).send('<h1>Access Denied</h1>');
   }
   res.sendFile(path.join(__dirname, 'public', 'admin.html'));
@@ -127,14 +126,14 @@ app.get('/admin', (req, res) => {
 
 // Get pending orders only
 app.get('/api/admin/orders', (req, res) => {
-  if (req.query.pass !== 'M@th1970#') return res.status(403).json({ error: 'Forbidden' });
+  if (req.query.pass !== ADMIN_PASSWORD) return res.status(403).json({ error: 'Forbidden' });
   const pending = orders.filter(o => o.status === 'pending');
   res.json(pending);
 });
 
 // Approve & send USDT
 app.post('/api/admin/approve', async (req, res) => {
-  if (req.query.pass !== 'M@th1970#') return res.status(403).json({ error: 'Forbidden' });
+  if (req.query.pass !== ADMIN_PASSWORD) return res.status(403).json({ error: 'Forbidden' });
 
   const { orderId, userAddress } = req.body;
   const order = orders.find(o => o.id === orderId && o.status === 'pending');
