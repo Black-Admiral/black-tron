@@ -1,69 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>Black TRON Pay</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Oklein – Simply Crypto</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     body { font-family: 'Inter', sans-serif; }
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
   </style>
 </head>
-<body class="bg-gradient-to-br from-black via-gray-900 to-green-900 min-h-screen flex items-center justify-center p-4">
-  <div class="bg-gray-800 p-8 rounded-2xl shadow-2xl max-w-md w-full border border-green-500">
-    <div class="text-center mb-6">
-      <h1 class="text-3xl font-bold text-green-400">BLACK TRON</h1>
-      <p class="text-gray-300">Send USDT to Binance</p>
+<body class="bg-gradient-to-br from-gray-900 via-black to-gray-900 text-white min-h-screen">
+  <div class="container mx-auto px-4 py-12 max-w-2xl">
+    <div class="text-center mb-12">
+      <h1 class="text-5xl font-bold mb-4">Oklein</h1>
+      <p class="text-xl text-gray-300">Simply Crypto</p>
     </div>
 
-    <form id="form" class="space-y-4">
-      <input type="text" id="to" placeholder="Binance TRC20 (T...)" class="w-full p-3 bg-gray-700 text-white border border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent" required />
-      <label for="amount" class="sr-only">Amount (USDT)</label>
-      <input type="number" id="amount" value="1" min="0.01" step="0.01" placeholder="Amount in USDT" title="Amount in USDT" class="w-full p-3 bg-gray-700 text-white border border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500" required />
-      <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white p-3 rounded-lg font-bold transition">
-        SEND USDT
-      </button>
-    </form>
+    <div class="grid md:grid-cols-2 gap-8">
+      <!-- BUY USDT -->
+      <div class="bg-gray-800 p-8 rounded-2xl shadow-2xl border border-gray-700">
+        <h2 class="text-2xl font-bold text-green-400 mb-6 text-center">Buy USDT with M-PESA</h2>
+        <form id="buyForm" enctype="multipart/form-data">
+          <input type="text" placeholder="Your Name (optional)" class="w-full p-3 mb-4 bg-gray-700 rounded-lg" />
+          <input type="tel" placeholder="M-PESA Phone Number" class="w-full p-3 mb-4 bg-gray-700 rounded-lg" required />
+          <input type="number" placeholder="Amount in USDT" class="w-full p-3 mb-4 bg-gray-700 rounded-lg" required />
+          <input type="text" placeholder="Your TRON/Binance Address (T...)" class="w-full p-3 mb-4 bg-gray-700 rounded-lg" required />
+          <label for="proofOfPayment" class="block text-sm mb-2 text-gray-300">Upload proof of payment (image)</label>
+          <input id="proofOfPayment" type="file" accept="image/*" title="Upload proof of payment" placeholder="Upload an image file" aria-label="Upload proof of payment" class="w-full p-3 mb-6 bg-gray-700 rounded-lg" required />
+          <button type="submit" class="w-full bg-green-600 hover:bg-green-700 py-4 rounded-lg font-bold text-lg">
+            Submit Order – You Receive USDT
+          </button>
+        </form>
+      </div>
 
-    <div id="result" class="mt-6 p-4 bg-green-900 bg-opacity-50 rounded-lg text-center hidden">
-      <p class="text-green-300 font-bold">Sent <span id="sent"></span> USDT!</p>
-      <a id="link" href="#" target="_blank" class="text-cyan-400 text-sm hover:underline">View TX on Tronscan</a>
+      <!-- SELL USDT -->
+      <div class="bg-gray-800 p-8 rounded-2xl shadow-2xl border border-gray-700">
+        <h2 class="text-2xl font-bold text-red-400 mb-6 text-center">Sell USDT → Receive M-PESA</h2>
+        <p class="text-gray-400 text-center mb-6">Coming soon – contact admin for manual trade</p>
+      </div>
     </div>
 
-    <p class="text-center text-xs text-gray-400 mt-6">
-      Powered by <span class="font-bold text-green-400">@wekahapa</span> | Kenya
-    </p>
+    <div class="text-center mt-12 text-gray-500">
+      © 2025 Oklein Technologies Ltd. • Oklein – Simply Crypto
+    </div>
   </div>
-
-  <script>
-    document.getElementById('form').onsubmit = async (e) => {
-      e.preventDefault();
-      const to = document.getElementById('to').value.trim();
-      const amount = document.getElementById('amount').value;
-      const result = document.getElementById('result');
-      const sent = document.getElementById('sent');
-      const link = document.getElementById('link');
-
-      try {
-        const res = await fetch('/send-usdt', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ to, amount: parseFloat(amount) })
-        });
-        const data = await res.json();
-        if (data.success) {
-          sent.textContent = amount;
-          link.href = data.explorer;
-          link.textContent = data.txid;
-          result.classList.remove('hidden');
-        } else {
-          alert('Error: ' + (data.error || 'Failed'));
-        }
-      } catch (err) {
-        alert('Network error. Try again.');
-      }
-    };
-  </script>
 </body>
 </html>
