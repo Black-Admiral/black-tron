@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Oklein Admin</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body class="bg-gray-900 text-white min-h-screen">
+  <div class="container mx-auto p-6 max-w-5xl">
+    <h1 class="text-4xl font-bold text-green-400 mb-8 text-center">Oklein Admin Dashboard</h1>
+    
+    <div id="orders" class="grid gap-6"></div>
+  </div>
+
+  <script>
+    const PASS = new URLSearchParams(location.search).get('pass');
+    fetch(`/api/admin/orders?pass=${PASS}`)
+      .then(r => r.json())
+      .then(orders => {
+        if (orders.error) return alert('Access denied');
+        const container = document.getElementById('orders');
+        if (orders.length === 0) {
+          container.innerHTML = '<p class="text-center text-gray-400 text-2xl">No pending orders 🎉</p>';
+          return;
+        }
+
+        orders.forEach(order => {
+          const card = document.createElement('div');
+          card.className = 'bg-gray-800 p-6 rounded-xl border border-gray-700';
+          card.innerHTML = `
+            <div class="flex justify-between items-start mb-4">
+              <div>
+                <p class="text-2xl font-bold">${order.amount} USDT</p>
+                <p class="text-gray-400">${order.name} • ${order.phone}</p>
+                <p class="text-sm text-gray-500">${new Date(order.createdAt).toLocaleString()}</p>
+              </div>
+              ${order.proof ? `<img src="${order.proof}" class="w-32 h-32 object-cover rounded-lg border border-gray-600">` : ''}
+            </div>
+
+            <div class="space-y-3">
+              <input type="text" id="addr-${order.id}" placeholder="User TRON Address (T...)" class="w-full p-3 bg-gray-700 rounded-lg" required />
+              <button onclick="approve('${order.id}')" class="w-full bg-green-600 hover:bg-green-700 py-3 rounded-lg font-bold">
+                Approve & Send USDT
+              </button>
+            </div>
+            <div id="result-${order.id}" class="mt-4 text-center"></div>
+          `;
+          container.appendChild(card);
+        });
+      });
+
+    async function approve(orderId) {
+      const addr = document.getElementById(`addr-${orderId}`).value.trim();
+      if (!addr.startsWith('T')) return alert('Invalid TRON address');
+
+      const result = document.getElementById(`result-${orderId}`);
+      result.innerHTML = 'Sending...';
+
+      const res = await fetch(`/api/admin/approve?pass=${PASS}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ orderId, userAddress: addr })
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        result.innerHTML = `
+          <p class="text-green-400 font-bold">USDT Sent!</p>
+          <a href="${data.explorer}" target="_blank" class="text-cyan-400 text-sm">View on Tronscan</a>
+        `;
+      } else {
+        result.innerHTML = `<p class="text-red-400">${data.error}</p>`;
+      }
+    }
+  </script>
+</body>
+</html>

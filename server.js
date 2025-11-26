@@ -114,3 +114,45 @@ app.listen(PORT, () => {
   console.log(`OKLEIN – Simply Crypto running on port ${PORT}`);
   console.log(`Visit: http://localhost:${PORT}`);
 });
+// === ADMIN DASHBOARD ===
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'oklein2025'; // Change this!
+
+app.get('/admin', (req, res) => {
+  if (req.query.pass !== ADMIN_PASSWORD) {
+    return res.status(403).send('<h1>Access Denied</h1>');
+  }
+  res.sendFile(path.join(__dirname, 'public', 'admin.html'));
+});
+
+// Get pending orders only
+app.get('/api/admin/orders', (req, res) => {
+  if (req.query.pass !== ADMIN_PASSWORD) return res.status(403).json({ error: 'Forbidden' });
+  const pending = orders.filter(o => o.status === 'pending');
+  res.json(pending);
+});
+
+// Approve & send USDT
+app.post('/api/admin/approve', async (req, res) => {
+  if (req.query.pass !== ADMIN_PASSWORD) return res.status(403).json({ error: 'Forbidden' });
+
+  const { orderId, userAddress } = req.body;
+  const order = orders.find(o => o.id === orderId && o.status === 'pending');
+  if (!order || order.type !== 'buy') return res.status(400).json({ error: 'Invalid order' });
+
+  try {
+    const contract = await tronWeb.contract().at(USDT_CONTRACT);
+    const tx = await contract.transfer(
+      userAddress,
+      order.amount * 1_000_000
+    ).send({ feeLimit: 40_000_000 });
+
+    order.status = 'completed';
+    order.txid = tx;
+    order.userAddress = userAddress;
+    order.completedAt = new Date();
+
+    res.json({ success: true, txid: tx, explorer: `https://tronscan.org/#/transaction/${tx}` });
+  } catch (err) {
+    res.status(500).json({ error: err.message || 'Transaction failed' });
+  }
+});
